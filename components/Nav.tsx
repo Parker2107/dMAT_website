@@ -12,6 +12,7 @@ const LINKS = [
   { href: "/exam", label: "Exam" },
   { href: "/rules", label: "Rules" },
   { href: "/replay", label: "Replay" },
+  { href: "/resources", label: "Official links" },
 ];
 
 export function Nav() {
