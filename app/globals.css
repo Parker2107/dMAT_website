@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  background: #f4f4f5;
+  color: #18181b;
+  font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Keep the practice surfaces predictable: the question formats use white as a
+   real symbol colour, so the app is deliberately light-only. */
