@@ -11,6 +11,7 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "preview": "vite-node scripts/preview.ts",
+    "space": "vite-node scripts/space.ts",
     "icons": "python scripts/make_icons.py"
   },
   "dependencies": {
