@@ -15,6 +15,7 @@ import {
   type AttemptRow,
   type ExamSessionRow,
 } from "@/lib/attempts";
+import { describeError, isTransientError } from "@/lib/errors";
 import { formatDuration, formatPercent, formatSeconds } from "@/lib/format";
 import {
   DIFFICULTIES,
@@ -36,6 +37,14 @@ export default function DashboardPage() {
 /** How many rows the recent-questions list shows at once. */
 const RECENT_LIMIT = 10;
 
+/**
+ * A cold open can race the access-token refresh, or arrive while a sleeping
+ * Supabase project wakes up. Both fail once and then work, so the load is
+ * retried before the error box goes up rather than asking for a manual reload.
+ */
+const LOAD_ATTEMPTS = 3;
+const RETRY_BACKOFF_MS = 400;
+
 function Dashboard() {
   const [summary, setSummary] = useState<Summary | null>(null);
   const [attempts, setAttempts] = useState<AttemptRow[]>([]);
@@ -45,17 +54,32 @@ function Dashboard() {
 
   useEffect(() => {
     let active = true;
-    Promise.all([fetchAttempts(), fetchExamSessions(10)])
-      .then(([rows, examSessions]) => {
+
+    async function load(attempt: number): Promise<void> {
+      try {
+        const [rows, examSessions] = await Promise.all([
+          fetchAttempts(),
+          fetchExamSessions(10),
+        ]);
         if (!active) return;
         setAttempts(rows);
         setSummary(summarise(rows));
         setSessions(examSessions);
-      })
-      .catch((cause) => {
+      } catch (cause) {
         if (!active) return;
-        setError(cause instanceof Error ? cause.message : String(cause));
-      });
+        const last = attempt >= LOAD_ATTEMPTS - 1;
+        if (!last && isTransientError(cause)) {
+          await new Promise((resolve) =>
+            setTimeout(resolve, RETRY_BACKOFF_MS * (attempt + 1)),
+          );
+          if (!active) return;
+          return load(attempt + 1);
+        }
+        setError(describeError(cause));
+      }
+    }
+
+    void load(0);
     return () => {
       active = false;
     };

@@ -20,6 +20,7 @@ import {
   finishExamSession,
   recordAttempt,
 } from "@/lib/attempts";
+import { describeError } from "@/lib/errors";
 import { formatDuration, formatSeconds } from "@/lib/format";
 import {
   emptyAnswer,
@@ -72,7 +73,7 @@ function ExamFlow({ taskType }: { taskType: TaskType }) {
       setQuestions(generated);
       setPhase("running");
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : String(cause));
+      setError(describeError(cause));
     }
   }
 

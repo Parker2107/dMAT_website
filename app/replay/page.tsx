@@ -8,6 +8,7 @@ import { QuestionTimer } from "@/components/QuestionTimer";
 import { RulesPanel } from "@/components/RulesPanel";
 import { SeedBadge } from "@/components/SeedBadge";
 import { QuestionSurface } from "@/components/questions/QuestionSurface";
+import { describeError } from "@/lib/errors";
 import { recordAttempt } from "@/lib/attempts";
 import {
   emptyAnswer,
@@ -66,7 +67,7 @@ function Replay() {
       restart();
     } catch (cause) {
       setQuestion(null);
-      setError(cause instanceof Error ? cause.message : String(cause));
+      setError(describeError(cause));
     }
   }
 

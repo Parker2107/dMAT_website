@@ -16,6 +16,7 @@ import { RulesPanel } from "@/components/RulesPanel";
 import { SeedBadge } from "@/components/SeedBadge";
 import { SupportCallout } from "@/components/SupportCallout";
 import { QuestionSurface } from "@/components/questions/QuestionSurface";
+import { describeError } from "@/lib/errors";
 import { recordAttempt } from "@/lib/attempts";
 import {
   emptyAnswer,
@@ -73,7 +74,7 @@ function Drill({ taskType }: { taskType: TaskType }) {
         setError(null);
         restart();
       } catch (cause) {
-        setError(cause instanceof Error ? cause.message : String(cause));
+        setError(describeError(cause));
       }
     },
     [taskType, restart],
