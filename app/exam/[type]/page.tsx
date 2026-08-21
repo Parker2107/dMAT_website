@@ -13,6 +13,7 @@ import {
 import { ExplanationPanel } from "@/components/ExplanationPanel";
 import { RulesPanel } from "@/components/RulesPanel";
 import { SeedBadge } from "@/components/SeedBadge";
+import { SupportCallout } from "@/components/SupportCallout";
 import { QuestionSurface } from "@/components/questions/QuestionSurface";
 import {
   createExamSession,
@@ -466,6 +467,11 @@ function ExamResults({
           Back to dashboard
         </Link>
       </div>
+
+      {/* Only ever on the results screen — never while the countdown runs. */}
+      <SupportCallout
+        reason={`You just sat ${questions.length} questions under exam pace and scored ${correctCount}. If this trainer is doing its job, a coffee is a lovely way to say so.`}
+      />
     </div>
   );
 }

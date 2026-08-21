@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { AuthGate } from "@/components/AuthGate";
 import { SeedBadge } from "@/components/SeedBadge";
+import { SupportCallout } from "@/components/SupportCallout";
 import { DailyVolumeChart } from "@/components/charts/DailyVolumeChart";
 import { StatTile } from "@/components/charts/StatTile";
 import { SERIES_COLOUR } from "@/components/charts/palette";
@@ -292,6 +293,12 @@ function Dashboard() {
             </>
           )}
         </section>
+      )}
+
+      {summary.overall.total > 0 && (
+        <SupportCallout
+          reason={`${summary.overall.total} questions practised here so far, free and ad-free. If that is showing up in your numbers above, a coffee would make my day.`}
+        />
       )}
 
       {summary.overall.total === 0 && (

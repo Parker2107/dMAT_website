@@ -14,6 +14,7 @@ import { ExplanationPanel } from "@/components/ExplanationPanel";
 import { QuestionTimer } from "@/components/QuestionTimer";
 import { RulesPanel } from "@/components/RulesPanel";
 import { SeedBadge } from "@/components/SeedBadge";
+import { SupportCallout } from "@/components/SupportCallout";
 import { QuestionSurface } from "@/components/questions/QuestionSurface";
 import { recordAttempt } from "@/lib/attempts";
 import {
@@ -44,6 +45,9 @@ export default function PracticePage() {
     </AuthGate>
   );
 }
+
+/** Questions answered in one sitting before the support nudge appears. */
+const TIP_AFTER_ANSWERS = 10;
 
 function Drill({ taskType }: { taskType: TaskType }) {
   const [choice, setChoice] = useState<DifficultyChoice>("random");
@@ -201,6 +205,15 @@ function Drill({ taskType }: { taskType: TaskType }) {
           Skip
         </button>
       </div>
+
+      {/* Below the controls, and only once someone has really used the drill —
+          a nudge on question one would just be in the way. */}
+      {tally.answered >= TIP_AFTER_ANSWERS && (
+        <SupportCallout
+          variant="inline"
+          reason={`${tally.answered} questions this session.`}
+        />
+      )}
     </div>
   );
 }

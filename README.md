@@ -96,6 +96,9 @@ nothing about what you practised leaves your own Supabase project.
 - **Dashboard** — questions practised per task type, accuracy, median time
   against the exam pace, a difficulty breakdown, daily volume, and recent
   exam sets.
+- **Buy me a coffee?** — an optional tip page with a UPI QR code, the UPI ID
+  and a contact address. It unlocks nothing; see
+  [Setting up the support page](#setting-up-the-support-page).
 
 ---
 
@@ -159,6 +162,27 @@ npx vite-node scripts/preview.ts json high | python scripts/render_question.py
 
 Both write PNGs to `scripts/out/`.
 
+### Setting up the support page
+
+`/support` is the "Buy me a coffee?" page. Everything it shows comes from
+[`lib/support.ts`](lib/support.ts):
+
+- **`UPI_QR_SRC`** — the QR people actually scan, currently
+  `public/upi-qr.jpeg`. Any size, aspect ratio or format works: the image is
+  rendered `object-contain` inside a square, so swapping the file is the whole
+  job. (`public/upi-qr.png` is the original grey PLACEHOLDER stand-in, now
+  unused — safe to delete.)
+- **`UPI_ID`** — the virtual payment address, shown as copyable text under the
+  QR and used to build the `upi://` deep link. It is `null` until you fill it
+  in, and while it is null the page shows only the QR rather than printing a
+  fake address beside a working code.
+- **`CONTACT_EMAIL`** — the address on the "or just say hello" card.
+
+The link appears in the header on every page, on the dashboard once you have
+answered at least one question, at the bottom of a practice session after ten
+answers, on the exam **results** screen, and on the official-links page. It is
+deliberately absent from a running exam and from any live question.
+
 ### Regenerating the app icons
 
 ```bash
@@ -170,7 +194,8 @@ npm run icons
 ## Layout
 
 ```text
-app/                     routes: dashboard, practice, exam, rules, replay, login
+app/                     routes: dashboard, practice, exam, rules, replay,
+                         resources, support, login
 components/
   questions/             one view per task type + a dispatcher
   render/                SVG figure catalogue, 4×4 matrix, 5×5 Latin grid
@@ -181,6 +206,7 @@ lib/
   rules.ts               task-type reference shown on the /rules pages
   attempts.ts            Supabase reads/writes + offline buffering
   stats.ts               dashboard aggregation
+  support.ts             UPI ID, contact address and QR path for /support
 supabase/migrations/     schema + row level security
 tests/generators/        property tests
 scripts/                 preview and rasterizing tools (dev only)

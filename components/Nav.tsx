@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabase/client";
+import { SUPPORT_HREF } from "@/lib/support";
 
 const LINKS = [
   { href: "/", label: "Dashboard" },
@@ -63,6 +64,18 @@ export function Nav() {
           })}
         </nav>
         <div className="ml-auto flex items-center gap-3 text-sm text-zinc-500">
+          {/* Kept out of LINKS so it reads as an aside rather than another
+              section of the app. */}
+          <Link
+            href={SUPPORT_HREF}
+            className={`rounded-md border px-2 py-1 ${
+              pathname === SUPPORT_HREF
+                ? "border-amber-500 bg-amber-100 text-amber-900"
+                : "border-amber-300 bg-amber-50 text-amber-900 hover:border-amber-500"
+            }`}
+          >
+            ☕ <span className="hidden sm:inline">Buy me a coffee?</span>
+          </Link>
           {email && (
             <>
               <span className="hidden sm:inline">{email}</span>

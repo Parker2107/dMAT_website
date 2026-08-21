@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { SupportCallout } from "@/components/SupportCallout";
 import { RESOURCE_GROUPS } from "@/lib/resources";
 
 export const metadata = {
@@ -77,6 +78,8 @@ export default function ResourcesPage() {
           g.a.s.t. or the TestDaF-Institut.
         </p>
       </section>
+
+      <SupportCallout variant="inline" />
     </div>
   );
 }
